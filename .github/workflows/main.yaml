@@ -1,0 +1,52 @@
+name: Package for release
+
+on:
+  release:
+    types:
+      - released
+  pull_request:
+    types:
+      - ready_for_review
+
+jobs:
+  plan:
+    name: Calculate package versions
+    runs-on: ubuntu-latest
+    outputs: 
+      versionManifest: ${{ steps.versionManifest.outputs.versionManifest }}
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+      - uses: actions/cache@v4
+      - name: Get version manifest
+        shell: pwsh
+        id: versionManifest
+        run: |
+          Import-Module -Force .\Get-Versions.psm1
+          Write-Output "::debug::Generating package versions"
+          $versionManifest = Get-Versions
+          "versionManifest=$versionManifest" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          $summary = "### Version manifest `r`n" + '```json' + "`r`n" + $versionManifest + "`r`n" + '````'
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+  build-release:
+    needs: 
+      - plan
+    if: ${{ fromJson(needs.plan.outputs.versionManifest != null && github.event_name == 'release' }}
+    name: Build for (${{ matrix.os }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows, ubuntu]
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+      - uses: actions/setup-dotnet@v4
+        name: Setup dotnet cli
+        with:
+          global-json-file: global.json
+          cache: true
+      - name: Build and restore
+        shell: pwsh
+        
+    
