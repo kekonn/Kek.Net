@@ -17,5 +17,14 @@ function Get-Versions {
     $packageVersions | ConvertTo-Json | Write-Output
 }
 
+function Get-LockFiles {
+    $lockFiles = Get-Item -Path src/**/packages.lock.json | Select-Object -ExpandProperty FullName
+    Write-Debug "Found the following lock files:"
+    $lockFiles | ForEach-Object { Write-Debug "\t- $_" }
+
+    $lockFiles | Write-Output
+}
+
 Install-Module -Name powershell-yaml -Force -AcceptLicense
 Export-ModuleMember -Function Get-Versions
+Export-ModuleMember -Function Get-LockFiles

@@ -26,7 +26,7 @@ jobs:
         shell: pwsh
         id: versionManifest
         run: |
-          Import-Module -Force .\Get-Versions.psm1
+          Import-Module -Force .\Build-Functions.psm1
           Write-Output "::debug::Generating package versions"
           $versionManifest = Get-Versions
           "versionManifest='$($versionManifest | ConvertTo-Json)'" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
@@ -48,12 +48,16 @@ jobs:
       - name: Summarize
         shell: pwsh
         run: |
+          Import-Module -Force .\Build-Functions.psm1
           Write-Output "::debug::Package lock file location"
+          Get-LockFiles | ForEach-Object { Write-Output "::debug::\t- $_"}
+          Write-Output "::debug::Working directory: $(pwd)"
       - uses: actions/setup-dotnet@v4
         name: Setup dotnet cli
         with:
           global-json-file: global.json
           cache: true
+          cache-dependency-path: src/*/packages.lock.json
       - name: Restore (locked)
         shell: pwsh
         run: dotnet restore --locked-mode
