@@ -66,7 +66,10 @@ jobs:
         env:
           VERSION_MANIFEST: ${{ needs.plan.outputs.versionManifest }}
         run: |
-          $versionManifest = ConvertFrom-Json -InputObject $($env:VERSION_MANIFEST | ConvertFrom-Json) -AsHashTable
+          Write-Output "::debug::Encoded version manifest: $env:VERSION_MANIFEST"
+          $versionManifest = $env:VERSION_MANIFEST | ConvertFrom-Json
+          Write-Output "::debug::Decoded version manifest: $versionManifest"
+          $versionManifest = ConvertFrom-Json -InputObject $versionManifest -AsHashTable
           foreach ($app in $versionManifest.GetEnumerator()) {
             $packageVersion = $app.Value.SemVer
             Write-Output "::debug::Building package " + $app.Key + " with version " + $packageVersion
