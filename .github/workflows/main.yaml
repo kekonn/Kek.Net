@@ -35,13 +35,13 @@ jobs:
   build-release:
     needs: 
       - plan
-    if: ${{ fromJson(needs.plan.outputs.versionManifest) != null && github.event_name == 'release' }}
+    if: ${{ fromJson(needs.plan.outputs.versionManifest) != null && (github.event_name == 'release' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         os: [win, linux]
     environment: release
-    name: Build for (${{ matrix.os }})
+    name: Build
     steps:
       - uses: actions/checkout@v4
         name: Checkout
