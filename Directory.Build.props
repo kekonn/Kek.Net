@@ -1,0 +1,25 @@
+<Project>
+    <!-- These properties will be shared for all projects -->
+  
+    <PropertyGroup>
+      <IsLinux>$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::get_Linux())))</IsLinux>
+      <IsWindows>$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::get_Windows())))</IsWindows>
+    </PropertyGroup>
+  
+    <PropertyGroup>
+      <LangVersion>12</LangVersion>
+      <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+  
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DebugType>full</DebugType>
+      <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
+    </PropertyGroup>
+  
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <Optimize>true</Optimize>
+      <DebugType>embedded</DebugType>
+      <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
+    </PropertyGroup>
+  
+  </Project>

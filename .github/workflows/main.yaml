@@ -41,7 +41,7 @@ jobs:
       matrix:
         os: [win, linux]
     environment: release
-    name: Build
+    name: Build for ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         name: Checkout
@@ -50,6 +50,9 @@ jobs:
         with:
           global-json-file: global.json
           cache: true
+      - name: Restore (locked)
+        shell: pwsh
+        run: dotnet restore --locked-mode
       - name: Build and restore
         shell: pwsh
         env:
