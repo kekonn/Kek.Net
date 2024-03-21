@@ -20,7 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: Checkout
-      - uses: actions/cache@v4
+        with:
+          fetch-depth: 1
       - name: Get version manifest
         shell: pwsh
         id: versionManifest
