@@ -34,7 +34,7 @@ jobs:
   build-release:
     needs: 
       - plan
-    if: ${{ fromJson(needs.plan.outputs.versionManifest != null && github.event_name == 'release' }}
+    if: ${{ fromJson(needs.plan.outputs.versionManifest) != null && github.event_name == 'release' }}
     name: Build for (${{ matrix.os }})
     runs-on: ubuntu-latest
     strategy:
