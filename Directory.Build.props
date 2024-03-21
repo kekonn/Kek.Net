@@ -21,5 +21,11 @@
       <DebugType>embedded</DebugType>
       <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
+    </PropertyGroup>
   
   </Project>
