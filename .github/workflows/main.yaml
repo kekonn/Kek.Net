@@ -45,6 +45,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: Checkout
+      - name: Summarize
+        shell: pwsh
+        run: |
+          Write-Output "::debug::Package lock file location"
       - uses: actions/setup-dotnet@v4
         name: Setup dotnet cli
         with:
@@ -53,16 +57,16 @@ jobs:
       - name: Restore (locked)
         shell: pwsh
         run: dotnet restore --locked-mode
-      - name: Build and restore
+      - name: Build
         shell: pwsh
         env:
           VERSION_MANIFEST: ${{ needs.plan.outputs.versionManifest }}
         run: |
-          $versionManifest = ConvertFrom-Json -InputObject $env:VERSION_MANIFEST -AsHashTable
+          $versionManifest = ConvertFrom-Json -InputObject $($env:VERSION_MANIFEST | ConvertFrom-Json) -AsHashTable
           foreach ($app in $versionManifest.GetEnumerator()) {
             $packageVersion = $app.Value.SemVer
             Write-Output "::debug::Building package " + $app.Key + " with version " + $packageVersion
-            & dotnet build $app.Value.Root -c Release --os ${{ matrix.os }} --no-self-contained `
+            & dotnet build --no-restore $app.Value.Root -c Release --os ${{ matrix.os }} --no-self-contained `
               -p:PackageRequireLicenseAcceptance=true `
               -p:PackageLicenseFile=LICENSE `
               -p:Version=$packageVersion `
