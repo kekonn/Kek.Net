@@ -1,0 +1,68 @@
+# Plan and package for release
+# On PRs, only the plan step is executed to output the version manifest.
+
+name: Package for release
+on:
+  workflow_dispatch: # For testing purposes
+  release:
+    types:
+      - released
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  plan:
+    name: Calculate package versions
+    runs-on: ubuntu-latest
+    outputs: 
+      versionManifest: ${{ steps.versionManifest.outputs.versionManifest }}
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+      - uses: actions/cache@v4
+      - name: Get version manifest
+        shell: pwsh
+        id: versionManifest
+        run: |
+          Import-Module -Force .\Get-Versions.psm1
+          Write-Output "::debug::Generating package versions"
+          $versionManifest = Get-Versions
+          "versionManifest=$versionManifest" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          $summary = "### Version manifest `r`n" + '```json' + "`r`n" + $versionManifest + "`r`n" + '````'
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+  build-release:
+    needs: 
+      - plan
+    if: ${{ fromJson(needs.plan.outputs.versionManifest != null && github.event_name == 'release' }}
+    name: Build for (${{ matrix.os }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [win, linux]
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+      - uses: actions/setup-dotnet@v4
+        name: Setup dotnet cli
+        with:
+          global-json-file: global.json
+          cache: true
+      - name: Build and restore
+        shell: pwsh
+        env:
+          VERSION_MANIFEST: ${{ needs.plan.outputs.versionManifest }}
+        run: |
+          $versionManifest = ConvertFrom-Json -InputObject $env:VERSION_MANIFEST -AsHashTable
+          foreach ($app in $versionManifest.GetEnumerator()) {
+            $packageVersion = $app.Value.SemVer
+            Write-Output "::debug::Building package " + $app.Key + " with version " + $packageVersion
+            & dotnet build $app.Value.Root -c Release --os ${{ matrix.os }} --no-self-contained `
+              -p:PackageRequireLicenseAcceptance=true `
+              -p:PackageLicenseFile=LICENSE `
+              -p:Version=$packageVersion `
+              -p:PackageProjectUrl=$env:REPO_URL `
+              -p:RepositoryUrl=$env:REPO_URL
+          }
+    

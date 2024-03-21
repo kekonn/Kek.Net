@@ -1,0 +1,12 @@
+
+name: PR Check
+on:
+  pull_request: 
+    branches:
+      - main
+    types:
+      - opened
+      - review_requested
+
+jobs: 
+  
