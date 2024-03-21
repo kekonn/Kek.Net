@@ -29,7 +29,7 @@ jobs:
           Import-Module -Force .\Get-Versions.psm1
           Write-Output "::debug::Generating package versions"
           $versionManifest = Get-Versions
-          "versionManifest='$(versionManifest | ConverTo-Json)'" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "versionManifest='$($versionManifest | ConvertTo-Json)'" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           $summary = "### Version manifest `r`n" + '```json' + "`r`n" + $versionManifest + "`r`n" + '````'
           $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
   build-release:
