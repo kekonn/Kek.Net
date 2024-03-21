@@ -2,15 +2,14 @@
 # On PRs, only the plan step is executed to output the version manifest.
 
 name: Package for release
-
 on:
   workflow_dispatch: # For testing purposes
   release:
     types:
       - released
   pull_request:
-    types:
-      - ready_for_review
+    branches:
+      - main
 
 jobs:
   plan:
