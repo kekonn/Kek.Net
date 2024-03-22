@@ -29,9 +29,15 @@ jobs:
           Import-Module -Force .\Build-Functions.psm1
           Write-Output "::debug::Generating package versions"
           $versionManifest = Get-Versions
-          "versionManifest='$($versionManifest | ConvertTo-Json)'" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "versionManifest=$(versionManifest | ConvertTo-Json)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          $versionManifest | Out-File -FilePath versionManifest.json
           $summary = "### Version manifest `r`n" + '```json' + "`r`n" + $versionManifest + "`r`n" + '````'
           $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+      - uses: actions/upload-artifact@v4
+        name: Upload versionManifest.json
+        with:
+          name: artifacts-plan-version-manifest
+          path: versionManifest.json
 
   build-release:
     needs: 
