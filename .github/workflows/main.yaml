@@ -76,7 +76,7 @@ jobs:
           foreach ($app in $versionManifest.GetEnumerator()) {
             $packageVersion = $app.Value.SemVer
             Write-Output "::debug::Building package " + $app.Key + " with version " + $packageVersion
-            "Build output for package ${app.Key} with version $packageVersion:`r`n" + '```' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+            "Build output for package ${app.Key} with version ${packageVersion}:`r`n" + '```' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
             dotnet build --no-restore $app.Value.Root -c Release --os ${{ matrix.os }} --no-self-contained `
               -p:PackageRequireLicenseAcceptance=true `
               -p:PackageLicenseFile=LICENSE `
