@@ -67,10 +67,8 @@ jobs:
       - name: Build
         shell: pwsh
         env:
-          VERSION_MANIFEST: ${{ needs.plan.outputs.versionManifest }}
+          VERSION_MANIFEST: ${{ fromJson(needs.plan.outputs.versionManifest) }}
         run: |
-          Write-Output "::debug::Encoded version manifest: $env:VERSION_MANIFEST"
-          $versionManifest = $env:VERSION_MANIFEST | ConvertFrom-Json
           Write-Output "::debug::Decoded version manifest: $versionManifest"
           $versionManifest = $versionManifest | ConvertFrom-Json -AsHashTable
           foreach ($app in $versionManifest.GetEnumerator()) {
