@@ -15,8 +15,6 @@ jobs:
   plan:
     name: Calculate package versions
     runs-on: ubuntu-latest
-    outputs: 
-      versionManifest: ${{ steps.versionManifest.outputs.versionManifest }}
     steps:
       - uses: actions/checkout@v4
         name: Checkout
@@ -29,7 +27,6 @@ jobs:
           Import-Module -Force .\Build-Functions.psm1
           Write-Output "::debug::Generating package versions"
           $versionManifest = Get-Versions
-          "versionManifest=$($versionManifest | ConvertTo-Json)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           $versionManifest | Out-File -FilePath versionManifest.json
           $summary = "### Version manifest `r`n" + '```json' + "`r`n" + $versionManifest + "`r`n" + '````'
           $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
@@ -42,7 +39,7 @@ jobs:
   build-release:
     needs: 
       - plan
-    if: ${{ fromJson(needs.plan.outputs.versionManifest) != null && (github.event_name == 'release' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ (github.event_name == 'release' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -52,6 +49,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: Checkout
+      - uses: actions/download-artifact@v4
+        name: Download version manifest
+        with:
+          name: artifacts-plan-version-manifest
+          path: versionManifest.json
       - name: Summarize
         shell: pwsh
         run: |
@@ -60,7 +62,7 @@ jobs:
           "Package lock file locations:`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           Get-LockFiles | ForEach-Object { "`t- $_`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append }
           "`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "Working directory: '$(pwd)'" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "Working directory: ``$(pwd)``" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
       - uses: actions/setup-dotnet@v4
         name: Setup dotnet cli
         with:
@@ -72,11 +74,9 @@ jobs:
         run: dotnet restore --locked-mode
       - name: Build
         shell: pwsh
-        env:
-          VERSION_MANIFEST: ${{ fromJson(needs.plan.outputs.versionManifest) }}
         run: |
+          $versionManifest = Get-Content -Path versionManifest.json | ConvertFrom-Json -AsHashTable
           Write-Output "::debug::Decoded version manifest: $versionManifest"
-          $versionManifest = $versionManifest | ConvertFrom-Json -AsHashTable
           foreach ($app in $versionManifest.GetEnumerator()) {
             $packageVersion = $app.Value.SemVer
             Write-Output "::debug::Building package " + $app.Key + " with version " + $packageVersion
