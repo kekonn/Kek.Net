@@ -51,18 +51,22 @@ jobs:
         name: Checkout
       - uses: actions/download-artifact@v4
         name: Download version manifest
+        id: download
         with:
           name: artifacts-plan-version-manifest
-          path: versionManifest.json
+          path: version-manifest
       - name: Summarize
         shell: pwsh
         run: |
           Import-Module -Force .\Build-Functions.psm1
           "## Build environment summary" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "Package lock file locations:`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          Get-LockFiles | ForEach-Object { "`t- $_`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append }
+          Get-LockFiles | ForEach-Object { "- $_`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append }
           "`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "Working directory: ``$(pwd)``" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "Version manifest directory: ``${{ steps.download.outputs.download-path }}```r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "Directory contents:`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          ls "${{ steps.download.outputs.download-path }}" | ForEach-Object { "- $_" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append }
       - uses: actions/setup-dotnet@v4
         name: Setup dotnet cli
         with:
@@ -75,7 +79,7 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
-          $versionManifest = Get-Content -Path versionManifest.json | ConvertFrom-Json -AsHashTable
+          $versionManifest = Get-Content -Path "${{ steps.download.outputs.download-path }}/versionManifest.json" | ConvertFrom-Json -AsHashTable
           Write-Output "::debug::Decoded version manifest: $versionManifest"
           foreach ($app in $versionManifest.GetEnumerator()) {
             $packageVersion = $app.Value.SemVer
