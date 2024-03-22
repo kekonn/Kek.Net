@@ -54,7 +54,7 @@ jobs:
           "Package lock file locations:`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           Get-LockFiles | ForEach-Object { "`t- $_`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append }
           "`r`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "Working directory: `$(pwd)`" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "Working directory: \`$(pwd)\`" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
       - uses: actions/setup-dotnet@v4
         name: Setup dotnet cli
         with:
