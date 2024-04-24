@@ -1,4 +1,5 @@
 function Get-Versions {
+    Install-Module -Name powershell-yaml -AllowClobber -AcceptLicense 
     $versionFiles = Get-Item -Path src/**/version.yaml | Select-Object -ExpandProperty FullName
     Write-Debug "Found the following version files:"
     $versionFiles | ForEach-Object { $_ | Write-Debug }
@@ -25,6 +26,5 @@ function Get-LockFiles {
     $lockFiles | Write-Output
 }
 
-Install-Module -Name powershell-yaml -Force -AcceptLicense
 Export-ModuleMember -Function Get-Versions
 Export-ModuleMember -Function Get-LockFiles

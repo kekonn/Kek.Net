@@ -85,7 +85,7 @@ jobs:
             $packageVersion = $app.Value.SemVer
             Write-Output "::debug::Building package ${app.Key} with version $packageVersion"
             "Build output for package ${app.Key} with version ${packageVersion}:`r`n ``````" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-            & dotnet build --no-restore $app.Value.Root -c Release --os ${{ matrix.os }} --no-self-contained `
+            & dotnet build --no-restore $app.Value.Root -c Release --runtime ${{ matrix.os }}-x64 --no-self-contained `
               -p:PackageRequireLicenseAcceptance=true `
               -p:PackageLicenseFile=LICENSE `
               -p:Version=$packageVersion `
@@ -94,4 +94,19 @@ jobs:
             | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
             '```' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           }
-    
+      - name: Pack
+        shell: pwsh
+        run: |
+          $artifactRoot = $env:GITHUB_WORKSPACE/../artifacts
+          mkdir $artifactRoot
+          Write-Output "::debug::Artifact root set to '$artifactRoot'"
+          $versionManifest = Get-Content -Path "${{ steps.download.outputs.download-path }}/versionManifest.json" | ConvertFrom-Json -AsHashTable
+          foreach ($app in $versionManifest.GetEnumerator()) {
+            $packageVersion = $app.Value.SemVer
+            Write-Output "::debug::Packaging package ${app.Key} with version $packageVersion"
+            "Build output for package ${app.Key} with version ${packageVersion}:`r`n ``````" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+            mkdir $artifactRoot/${app.Key}
+            & dotnet pack --no-restore $app.Value.Root -c Release --no-self-contained `
+              --output $artifactRoot/${app.Key} --runtime ${{ matrix.os }}-x64
+
+          }
