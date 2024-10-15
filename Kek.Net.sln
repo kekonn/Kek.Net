@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		README.md = README.md
 		global.json = global.json
+		Directory.Packages.props = Directory.Packages.props
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kek.Net.AspNet", "src\Kek.Net.AspNet\Kek.Net.AspNet.csproj", "{42FE1425-3AD4-495D-9B13-F8EC5E8F1865}"
@@ -16,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kek.Net.ErrorHandling", "src\Kek.Net.ErrorHandling\Kek.Net.ErrorHandling.csproj", "{206655CC-CFCA-4F8B-A7B1-56B299A6DCA0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kek.Net.Extensions", "src\Kek.Net.Extensions\Kek.Net.Extensions.csproj", "{BFA704DC-BB88-44EE-93C9-D2258ABD1FCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kek.Net.ErrorHandling.Tests", "Kek.Net.ErrorHandling.Tests\Kek.Net.ErrorHandling.Tests.csproj", "{2B9E27C8-CBE1-4239-8EF9-58BF00B65F64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,5 +42,9 @@ Global
 		{BFA704DC-BB88-44EE-93C9-D2258ABD1FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFA704DC-BB88-44EE-93C9-D2258ABD1FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFA704DC-BB88-44EE-93C9-D2258ABD1FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B9E27C8-CBE1-4239-8EF9-58BF00B65F64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B9E27C8-CBE1-4239-8EF9-58BF00B65F64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B9E27C8-CBE1-4239-8EF9-58BF00B65F64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B9E27C8-CBE1-4239-8EF9-58BF00B65F64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
