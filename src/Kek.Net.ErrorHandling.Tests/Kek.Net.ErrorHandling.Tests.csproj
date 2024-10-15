@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\Kek.Net.ErrorHandling\Kek.Net.ErrorHandling.csproj" />
+      <ProjectReference Include="..\Kek.Net.ErrorHandling\Kek.Net.ErrorHandling.csproj" />
     </ItemGroup>
 
 </Project>

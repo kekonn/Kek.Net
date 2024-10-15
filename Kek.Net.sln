@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kek.Net.ErrorHandling", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kek.Net.Extensions", "src\Kek.Net.Extensions\Kek.Net.Extensions.csproj", "{BFA704DC-BB88-44EE-93C9-D2258ABD1FCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kek.Net.ErrorHandling.Tests", "Kek.Net.ErrorHandling.Tests\Kek.Net.ErrorHandling.Tests.csproj", "{2B9E27C8-CBE1-4239-8EF9-58BF00B65F64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kek.Net.ErrorHandling.Tests", "src\Kek.Net.ErrorHandling.Tests\Kek.Net.ErrorHandling.Tests.csproj", "{2B9E27C8-CBE1-4239-8EF9-58BF00B65F64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
