@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net8.0": {
+      "kek.net.aspnet": {
+        "type": "Project"
+      },
+      "kek.net.errorhandling": {
+        "type": "Project"
+      }
+    },
+    "net8.0/linux-x64": {},
+    "net8.0/win-x64": {}
+  }
+}
