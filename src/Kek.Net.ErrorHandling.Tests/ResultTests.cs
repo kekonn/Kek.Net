@@ -7,7 +7,7 @@ public class ResultTests
     {
         // Arrange
         var error = new Error("Something went wrong");
-        Result<object> sut = Result.Fail<object>(error);
+        var sut = Result<object>.Fail(error);
         
         // Act + Assert
         Assert.Throws<InvalidOperationException>(() => sut.Data);
@@ -44,7 +44,7 @@ public class ResultTests
     {
         // Arrange
         var resValue = 1;
-        var sut = Result.Ok(resValue);
+        var sut = Result<int>.Ok(resValue);
         
         // Assert
         Assert.True(sut.IsSuccess, "Ok result should be marked successful");
@@ -56,7 +56,7 @@ public class ResultTests
     {
         // Arrange
         var error = new Error("Test");
-        var sourceResult = Result.Fail<object>(error);
+        var sourceResult = Result<object>.Fail(error);
         
         // Act
         var sut = sourceResult.ToResult();

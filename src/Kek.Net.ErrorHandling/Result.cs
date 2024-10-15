@@ -24,17 +24,6 @@ public class Result : ResultBase
     }
 
     /// <summary>
-    /// Creates a result signifying operation success with return data.
-    /// </summary>
-    /// <param name="data">The data returned from the successful operation.</param>
-    /// <typeparam name="TData">The type of the return data</typeparam>
-    /// <returns>A result signaling operation success containing the operation's return data.</returns>
-    public static Result<TData> Ok<TData>(TData data)
-    {
-        return new Result<TData>(data);
-    }
-
-    /// <summary>
     /// Creates a result signalling a successful operation.
     /// </summary>
     /// <returns>A <see cref="Result"/> with IsSuccess set to true.</returns>
@@ -42,12 +31,7 @@ public class Result : ResultBase
     {
         return new Result();
     }
-
-    public static Result<TData> Ok<TData>()
-    {
-        return new Result<TData>();
-    }
-
+    
     /// <summary>
     /// Creates a <see cref="Result"/> with the given error that indicates a failure.
     /// </summary>
@@ -72,29 +56,6 @@ public class Result : ResultBase
     }
 
     /// <summary>
-    /// Creates a <see cref="Result"/> with the given error that indicates a failure.
-    /// </summary>
-    /// <param name="error">The description of the failure.</param>
-    /// <returns>The result signaling operation failure.</returns>
-    public static Result<TData> Fail<TData>(IError error)
-    {
-        ArgumentNullException.ThrowIfNull(error);
-        return Fail<TData>([error]);
-    }
-
-    /// <summary>
-    /// Creates a <see cref="Result"/> with the given errors that indicates a failure.
-    /// </summary>
-    /// <param name="errors">A list of errors specifying the failure.</param>
-    /// <returns>The result signaling operation failure.</returns>
-    public static Result<TData> Fail<TData>(params IError[] errors)
-    {
-        ArgumentNullException.ThrowIfNull(errors);
-
-        return new Result<TData>().WithReasons(errors);
-    }
-
-    /// <summary>
     /// Converts a <see cref="Result"/> to a typed <see cref="Result{TData}"/>.
     /// </summary>
     /// <typeparam name="TData">The type of return data.</typeparam>
@@ -102,7 +63,7 @@ public class Result : ResultBase
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Result<TData> ToResult<TData>()
     {
-        return new Result<TData>().WithReasons(Reasons);
+        return Result<TData>.Ok().WithReasons(Reasons);
     }
 }
 
@@ -112,12 +73,12 @@ public class Result : ResultBase
 /// <typeparam name="TData">The type of return data.</typeparam>
 public class Result<TData> : ResultBase, IResult<TData>
 {
-    internal Result(TData data)
+    protected Result(TData data)
     {
         _value = data;
     }
 
-    internal Result()
+    protected Result()
     {
         _value = default;
     }
@@ -176,7 +137,27 @@ public class Result<TData> : ResultBase, IResult<TData>
     {
         if (data is Result<TData> r) return r;
 
-        return Result.Ok(data);
+        return Ok(data);
+    }
+
+    /// <summary>
+    /// Implicitly converts an <see cref="Error"/> to a <see cref="Result{TData}"/> indicating failure.
+    /// </summary>
+    /// <param name="error">The error to convert.</param>
+    /// <returns>A result signaling operation failure.</returns>
+    public static implicit operator Result<TData>(Error error)
+    {
+        return Fail(error);
+    }
+
+    /// <summary>
+    /// Implicitly convert an array of <see cref="Error"/> objects to a typed result.
+    /// </summary>
+    /// <param name="errors">The array of errors to convert.</param>
+    /// <returns>A typed result.</returns>
+    public static implicit operator Result<TData>(Error[] errors)
+    {
+        return Fail(errors);
     }
 
     /// <summary>
@@ -187,5 +168,46 @@ public class Result<TData> : ResultBase, IResult<TData>
     public Result ToResult()
     {
         return Result.Ok().WithReasons(Reasons);
+    }
+    
+    /// <summary>
+    /// Creates a result signifying operation success with return data.
+    /// </summary>
+    /// <param name="data">The data returned from the successful operation.</param>
+    /// <typeparam name="TData">The type of the return data</typeparam>
+    /// <returns>A result signaling operation success containing the operation's return data.</returns>
+    public static Result<TData> Ok(TData data)
+    {
+        return new Result<TData>(data);
+    }
+
+    /// <summary>
+    /// Create a successful result without data.
+    /// </summary>
+    /// <returns>A successful result of type <typeparamref name="TData"/>.</returns>
+    public static Result<TData> Ok()
+    {
+        return new Result<TData>();
+    }
+    
+    /// <summary>
+    /// Creates a <see cref="Result"/> with the given errors that indicates a failure.
+    /// </summary>
+    /// <param name="errors">A list of errors specifying the failure.</param>
+    /// <returns>The result signaling operation failure.</returns>
+    public static Result<TData> Fail(params Error[] errors)
+    {
+        return Ok().WithReasons(errors);
+    }
+    
+    /// <summary>
+    /// Creates a <see cref="Result"/> with the given error that indicates a failure.
+    /// </summary>
+    /// <param name="error">The description of the failure.</param>
+    /// <returns>The result signaling operation failure.</returns>
+    public static Result<TData> Fail(Error error)
+    {
+        ArgumentNullException.ThrowIfNull(error);
+        return Fail([error]);
     }
 }
