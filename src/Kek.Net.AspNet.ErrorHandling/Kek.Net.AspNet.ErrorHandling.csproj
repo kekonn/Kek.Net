@@ -5,6 +5,10 @@
         <Nullable>enable</Nullable>
         <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="Kek.Net.AspNet.ErrorHandling.Tests" />
+    </ItemGroup>
 
     <ItemGroup>
         <Content Include="..\..\LICENSE">

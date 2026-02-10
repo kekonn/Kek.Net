@@ -5,6 +5,18 @@ namespace Kek.Net.ErrorHandling;
 public class Result : ResultBase
 {
 
+    protected Result()
+    {
+        Reasons = new List<IReason>();
+    }
+    
+    protected Result(IEnumerable<IError> errors)
+    {
+        ArgumentNullException.ThrowIfNull(errors);
+        
+        Reasons = new List<IReason>(errors);
+    }
+    
     /// <summary>
     /// Add the given reasons to the current result.
     /// </summary>
