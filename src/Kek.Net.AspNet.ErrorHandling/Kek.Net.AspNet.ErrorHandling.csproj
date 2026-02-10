@@ -17,8 +17,4 @@
       <ProjectReference Include="..\Kek.Net.AspNet\Kek.Net.AspNet.csproj" />
       <ProjectReference Include="..\Kek.Net.ErrorHandling\Kek.Net.ErrorHandling.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Configuration\" />
-    </ItemGroup>
 </Project>

@@ -9,4 +9,5 @@ public class ResultExceptionHandler : IExceptionHandler
     {
         throw new NotImplementedException();
     }
+
 }

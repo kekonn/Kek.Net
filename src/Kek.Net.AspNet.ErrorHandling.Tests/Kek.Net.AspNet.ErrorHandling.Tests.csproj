@@ -3,9 +3,8 @@
     <PropertyGroup>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <OutputType>exe</OutputType>
-        <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <OutputType>exe</OutputType>
         <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
 

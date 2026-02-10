@@ -10,14 +10,15 @@
       <DocumentationFile>bin\Release\Kek.Net.AspNet.xml</DocumentationFile>
     </PropertyGroup>
 
-    <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
-    </ItemGroup>
     
     <ItemGroup>
       <Content Include="..\..\LICENSE">
         <Link>LICENSE</Link>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 </Project>
