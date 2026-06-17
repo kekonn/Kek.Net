@@ -20,7 +20,8 @@ public static class IEnumerableExtensions
         {
             return Array.Empty<TItem>();
         }
-        
-        return collection.SelectMany(item => navigator(item).Flatten(navigator));
+
+        var descendants = collection.SelectMany(navigator).Flatten(navigator);
+        return collection.Concat(descendants);
     }
 }

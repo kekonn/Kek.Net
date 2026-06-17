@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -11,18 +10,15 @@
       <DocumentationFile>bin\Release\Kek.Net.AspNet.xml</DocumentationFile>
     </PropertyGroup>
 
-    <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Kek.Net.ErrorHandling\Kek.Net.ErrorHandling.csproj" />
-    </ItemGroup>
-
+    
     <ItemGroup>
       <Content Include="..\..\LICENSE">
         <Link>LICENSE</Link>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 </Project>

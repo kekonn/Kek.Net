@@ -18,3 +18,12 @@ public interface IResult
     /// </summary>
     ICollection<IReason> Reasons { get; }
 }
+
+public interface IResult<out TData> : IResult
+{
+    /// <summary>
+    /// Gets the return value of the operation, if successful. 
+    /// </summary>
+    /// <exception cref="InvalidOperationException">When trying to get the data of an unsuccessful operation.</exception>
+    TData? Data { get; }
+}
